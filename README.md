@@ -25,11 +25,8 @@
 # 📁 Estructura del proyecto
 MyCaja
 ├── MyCajaApp.swift            # Punto de entrada de la app
-├── ContentView.swift          # Vista principal con el menú y navegación
-├── Assets.xcassets            # Recursos gráficos (íconos, colores)
-│   ├── AccentColor.colorset
-│   ├── AppIcon.appiconset
-│   └── Contents.json
+├── ContentView.swift          # Controla la navegación y estado del menú
+├── Assets.xcassets            # Recursos gráficos (iconos, colores)
 ├── Config                     # Configuración de la app
 ├── Extensions                 # Extensiones útiles para SwiftUI
 ├── Item.swift                 # Modelo de datos principal
@@ -38,8 +35,6 @@ MyCaja
 │       └── MenuOption.swift   # Opciones del menú lateral
 ├── Persistence                # Persistencia de datos (Core Data, SwiftData)
 ├── Preview Content            # Recursos para previsualización en SwiftUI
-│   └── Preview Assets.xcassets
-│       └── Contents.json
 ├── Resources                  # Archivos adicionales como JSON o fuentes
 ├── Services                   # Servicios para la lógica de negocio y datos
 ├── Utils                      # Métodos y funciones auxiliares
