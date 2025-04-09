@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct ProductLsitView: View {
+struct ProductListView: View {
     
     // Access the context from the enviroment (inyection) acceso a swiftdata
     @Environment(\.modelContext) private var context
@@ -23,67 +23,46 @@ struct ProductLsitView: View {
     
     var body: some View {
         NavigationStack{
-            /*
-            if viewModel.products.isEmpty{
-                Spacer()
-                Text("No hay productos disponibles.")
-                    .font(.headline).foregroundStyle(Color.black)
-                Spacer()
-            } else {
-                Spacer()
-                Text("Si hay productos disponibles.")
-                    .font(.headline).foregroundStyle(Color.black)
-                Spacer()
-            }
-            */
-            if viewModel.products.isEmpty{
-                Spacer()
-                Text("No hay productos disponibles.")
-                    .font(.headline).foregroundStyle(Color.black)
-                Spacer()
-            } else {
-                
-                ScrollView{
-                    LazyVStack(spacing:16){
-                        ForEach(viewModel.products){
-                            product in ProductCardView(product: product)
+            VStack {
+                if viewModel.products.isEmpty {
+                    Spacer()
+                    Text("No hay productos disponibles.")
+                        .font(.headline).foregroundStyle(Color.black)
+                    Spacer()
+                } else {
+                    ScrollView {
+                        LazyVStack(spacing:16){
+                            ForEach(viewModel.products){ product in ProductCardView(product: product)
+                            }
                         }
-                    }
-                    .padding()
-                }
-                
-                /*
-                List(viewModel.products){ product in
-                    HStack{
-                        VStack(alignment: .leading){
-                            Text(product.name)
-                        }
+                        .padding()
+                        .frame(maxWidth: .infinity)
                     }
                 }
-                */
             }
-        }
-        
-        .navigationTitle("Productos")
-        .toolbar{
-            ToolbarItem(placement: .topBarTrailing){
-                Button(action: {
-                    showingAddProduct = true
-                }){
-                    Image(systemName: "plus")
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color(.systemBackground))
+            .navigationTitle("Productos")
+            .toolbar{
+                ToolbarItem(placement: .topBarTrailing){
+                    Button(action: {
+                        showingAddProduct = true
+                    }){
+                        Image(systemName: "plus")
+                    }
                 }
             }
-        }
-        .sheet(isPresented: $showingAddProduct){
-            AddProductView(viewModel: viewModel, isPresented: $showingAddProduct)
-        }
-        .onAppear{
-            viewModel.loadAllProducts()
+            .sheet(isPresented: $showingAddProduct){
+                AddProductView(viewModel: viewModel, isPresented: $showingAddProduct)
+            }
+            .onAppear{
+                viewModel.loadAllProducts()
+            }
         }
         
     }
 }
 
 #Preview {
-    ProductLsitView()
+    ProductListView()
 }

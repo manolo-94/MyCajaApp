@@ -4,17 +4,29 @@
 //
 //  Created by MacBook Air on 05/04/25.
 //
+// Manejador de Base de Datos
 
 import SwiftData
 
-class PersistenceController {
-    static let shared = PersistenceController()
+@MainActor
+final class SwiftDataStack {
+    @MainActor static let shared = SwiftDataStack()
     
     let container: ModelContainer
     
-    init(){
+    private init(){
+        let schema = Schema([
+            ProductModel.self
+            // SaleModel
+            // UserModel
+            // Agregamos aquí todos los modelos
+        ])
+        
+        let configuartion = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        
         do {
-            container = try ModelContainer(for: ProductModel.self)
+            container = try ModelContainer( for: schema, configurations: [configuartion])
+            
         } catch {
             fatalError("Error al inicializar SwiftData:\(error)")
         }

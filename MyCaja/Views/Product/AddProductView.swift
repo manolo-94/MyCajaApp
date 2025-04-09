@@ -7,16 +7,25 @@
 
 import SwiftUI
 
-struct AddProduct: View {
+struct AddProductView: View {
     
-    @Environment(\.dismiss) var dismiss
-    @ObservableObject var viewModel: ProductViewModel
+    //@Environment(\.dismiss) var dismiss
+    @ObservedObject var viewModel: ProductViewModel
+    @Binding var isPresented: Bool
     
     @State private var name: String = ""
     @State private var price: String = ""
     @State private var available: Bool = true
     @State private var presentation: PresentationEnum = .unidad
     @State private var baseUnit: BaseUnitEnum = .pieza
+    
+    @State private var showAlert = false
+    @State private var showSuccessAlert =  false
+    @State private var alertMessage = ""
+    
+    @State private var showToast = false
+    @State private var toastMessage = ""
+    @State private var shoeError = false
     
     var body: some View {
         NavigationStack{
@@ -35,24 +44,105 @@ struct AddProduct: View {
                     
                     Picker("Unidad de Medida", selection: $baseUnit){
                         ForEach(BaseUnitEnum.allCases, id: \.self){ unit in
-                            Text(baseUnit.rawValue)
+                            Text(unit.rawValue)
                         }
                     }
                 }
             }
             .navigationTitle("Nuevo Producto")
+            /*
+             .alert("Error", isPresented: $showAlert){
+             Button("Ok", role: .cancel){}
+             } message: {
+             Text(alertMessage)
+             }
+             .alert("Guardado exitosamente!", isPresented: $showSuccessAlert){
+             Button("Ok"){
+             isPresented = false
+             }
+             }
+             */
             .toolbar{
                 ToolbarItem(placement: .topBarLeading){
                     Button("Cancelar"){
-                        dismiss()
+                        //dismiss()
+                        isPresented = false
                     }
                 }
-                
                 ToolbarItem(placement: .topBarLeading){
-                    Button("Guardar"){
-                        print("Producto Guardado")
+                    Button(action:{
+                        saveProduct()
+                    }){
+                        Text("Guardar")
                     }
+                    .disabled(name.isEmpty || price.isEmpty)
                 }
+            }
+            // --- Toast View ---
+            if showToast {
+                VStack{
+                    Spacer()
+                    HStack{
+                        Text(toastMessage).foregroundStyle(Color.white)
+                            .padding()
+                            .background(shoeError ? Color.red : Color.green)
+                            .cornerRadius(12)
+                            .shadow(radius: 10)
+                    }
+                    .padding(.bottom, 30)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .animation(.easeInOut(duration: 0.5), value: showToast)
+                }
+            }
+        }
+    }
+
+    
+    private func saveProduct(){
+        guard !name.isEmpty else {
+            //alertMessage = "Por favor ingrese un precio válido"
+            //showAlert = true
+            showTemporaryToast(message: "Por favor complete todos los campos", isError: true)
+            return
+        }
+        
+        guard let priceValue = Double(price) else {
+            //alertMessage = "Por favor ingrese un precio válido"
+            //showAlert = true
+            showTemporaryToast(message: "Por favor ingrese un valor numerico en precio", isError: true)
+            return
+        }
+        
+        viewModel.addProduct(
+            name: name,
+            price: priceValue,
+            available: available,
+            presentation: presentation,
+            baseUnit: baseUnit,
+            image: nil
+        )
+        //print("Producto Guardado")
+        //dismiss()
+        //isPresented = false
+        //showSuccessAlert = true
+        showTemporaryToast(message: "Producto creado con exito!", isError: false)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5){
+            isPresented = false
+        }
+    }
+    
+    private func showTemporaryToast(message: String, isError: Bool){
+        
+        toastMessage = message
+        shoeError = isError
+        withAnimation{
+            showToast = true
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2){
+            withAnimation{
+                showToast = false
             }
         }
     }

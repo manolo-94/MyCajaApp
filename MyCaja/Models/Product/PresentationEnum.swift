@@ -9,7 +9,7 @@ import Foundation
 
 // Enun para la forma en que se vende el producto
 
-enum PresentacionEnum: String, CaseIterable, Identifiable, Codable {
+enum PresentationEnum: String, CaseIterable, Identifiable, Codable {
     
     case granel
     case paquete
