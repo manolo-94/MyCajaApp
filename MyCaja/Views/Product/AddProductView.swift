@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct AddProductView: View {
     
@@ -18,6 +19,7 @@ struct AddProductView: View {
     @State private var available: Bool = true
     @State private var presentation: PresentationEnum = .unidad
     @State private var baseUnit: BaseUnitEnum = .pieza
+    @State private var image: Data? = nil
     
     @State private var showAlert = false
     @State private var showSuccessAlert =  false
@@ -26,6 +28,9 @@ struct AddProductView: View {
     @State private var showToast = false
     @State private var toastMessage = ""
     @State private var shoeError = false
+    
+    @State private var selectedItem: PhotosPickerItem? = nil
+    @State private var selectedAsset: PhotosPickerItem? = nil
     
     var body: some View {
         NavigationStack{
@@ -46,6 +51,23 @@ struct AddProductView: View {
                         ForEach(BaseUnitEnum.allCases, id: \.self){ unit in
                             Text(unit.rawValue)
                         }
+                    }
+                    
+                    PhotosPicker(selection: $selectedItem, matching: .images, photoLibrary: .shared()) {
+                        Text("Seleccionar imagen")
+                    }
+                    .onChange(of: selectedItem) { oldItem, newItem in
+                        if let newItem {
+                            Task {
+                                if let data = try? await newItem.loadTransferable(type: Data.self) {
+                                    self.image = data
+                                }
+                            }
+                        }
+                    }
+
+                    if let image, let uiImage = UIImage(data: image){
+                        Image(uiImage: uiImage).resizable().scaledToFit().frame(width:100, height:100).clipShape(RoundedRectangle(cornerRadius:10)).frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                 }
             }
@@ -119,7 +141,7 @@ struct AddProductView: View {
             available: available,
             presentation: presentation,
             baseUnit: baseUnit,
-            image: nil
+            image: image
         )
         //print("Producto Guardado")
         //dismiss()
