@@ -193,7 +193,7 @@ struct EditProductView: View {
     
     /// Función para eliminar el producto.
     private func deleteProduct(){
-        viewModel.removeProduct(product: product)
+        viewModel.removeProduct(product)
         dismiss()  // Cierra la vista
         print("Producto Eliminado")
     }

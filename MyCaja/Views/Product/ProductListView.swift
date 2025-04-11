@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 /// Vista principal que muestra la lista de productos disponibles.
+///
 /// Permite agregar nuevos productos o editar los existentes.
 struct ProductListView: View {
     
@@ -24,9 +25,11 @@ struct ProductListView: View {
     /// Producto seleccionado para editar.
     @State private var selectedProduct: ProductModel? = nil
     
-    /// Inicializador que crea el ViewModel utilizando el contexto principal de SwiftData.
-    init(){
-        _viewModel = StateObject(wrappedValue: ProductViewModel(context: SwiftDataStack.shared.container.mainContext))
+    /// Inicializa la vista creando el `ViewModel` necesario para la gestión de productos.
+    init() {
+        let context = SwiftDataStack.shared.container.mainContext
+        let productService = ProductService(context: context)
+        _viewModel = StateObject(wrappedValue: ProductViewModel(productService: productService))
     }
     
     var body: some View {
@@ -40,14 +43,14 @@ struct ProductListView: View {
                         .foregroundStyle(Color.black)
                     Spacer()
                 } else {
-                    // Si hay productos, se muestra una lista scrollable.
+                    // Si hay productos, se muestra una lista desplazable.
                     ScrollView {
                         LazyVStack(spacing: 16) {
-                            // Se itera sobre los productos y se crea una tarjeta para cada uno.
+                            // Se crea una tarjeta para cada producto.
                             ForEach(viewModel.products) { product in
                                 ProductCardView(product: product)
                                     .onTapGesture {
-                                        // Al hacer clic en un producto, se selecciona para editar.
+                                        // Al tocar un producto, se selecciona para su edición.
                                         selectedProduct = product
                                     }
                             }
@@ -57,9 +60,9 @@ struct ProductListView: View {
                     }
                 }
             }
-            // Configura la vista para que ocupe todo el espacio disponible.
+            // Configura la vista para ocupar todo el espacio disponible.
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color(.systemBackground))
+            .background(Color(.systemBackground)) // Fondo del contenedor.
             .navigationTitle("Productos") // Título de la navegación.
             .toolbar {
                 // Botón en la barra de herramientas para agregar un nuevo producto.

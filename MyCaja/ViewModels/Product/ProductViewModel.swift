@@ -8,50 +8,49 @@
 import Foundation
 import SwiftData
 
-/// ViewModel encargado de gestionar la lógica de negocio relacionada a los productos.
+/// ViewModel responsable de gestionar la lógica de negocio relacionada con los productos.
 ///
 /// Administra la lista de productos y expone métodos para agregar, editar, eliminar y cargar productos.
 /// Utiliza un `ProductService` como capa de acceso a los datos.
-/// Todas las operaciones son realizadas en el hilo principal (`@MainActor`).
+/// Todas las operaciones se ejecutan en el hilo principal (`@MainActor`) para mantener la sincronización de la interfaz.
 @MainActor
 final class ProductViewModel: ObservableObject {
     
-    /// Servicio de productos utilizado para acceder y modificar los datos.
-    private let productService: ProductService
+    private let productService: ProductServiceProtocol
     
-    /// Lista de productos disponibles, observable por la vista.
+    /// Lista observable de productos disponibles. La vista se actualiza automáticamente al modificarse esta propiedad.
     @Published var products: [ProductModel] = []
     
-    /// Inicializa el ViewModel con un contexto de datos proporcionado.
+    /// Inicializa el ViewModel con una instancia de `ProductServiceProtocol`.
     ///
-    /// - Parameter context: Contexto de modelo de SwiftData.
-    init(context: ModelContext){
-        self.productService = ProductService(context: context)
+    /// - Parameter productService: Servicio encargado de la gestión de productos.
+    init(productService: ProductServiceProtocol) {
+        self.productService = productService
         loadAllProducts()
         
-        // Solo generar productos de prueba si no existen productos guardados
+        // Generar productos de prueba solo si no existen productos almacenados
         if products.isEmpty {
             generateMockData()
         }
     }
     
-    /// Carga todos los productos disponibles desde el servicio y actualiza la propiedad `products`.
-    func loadAllProducts(){
+    /// Carga todos los productos almacenados utilizando el servicio y actualiza la lista `products`.
+    func loadAllProducts() {
         products = productService.fetchAllProducts()
     }
     
-    /// Genera datos de prueba (mock) en caso de que no existan productos.
-    func generateMockData(){
+    /// Genera datos de prueba (mock) si la base de datos no contiene productos.
+    func generateMockData() {
         productService.generateMockProducts(count: 5)
         loadAllProducts()
     }
     
-    /// Agrega un nuevo producto a la base de datos y actualiza la lista.
+    /// Agrega un nuevo producto a la base de datos y actualiza la lista de productos.
     ///
     /// - Parameters:
     ///   - name: Nombre del producto.
     ///   - price: Precio del producto.
-    ///   - available: Indica si el producto está disponible.
+    ///   - available: Disponibilidad del producto.
     ///   - presentation: Tipo de presentación del producto.
     ///   - baseUnit: Unidad de medida base del producto.
     ///   - image: Imagen asociada al producto, opcional.
@@ -61,9 +60,9 @@ final class ProductViewModel: ObservableObject {
         available: Bool,
         presentation: PresentationEnum,
         baseUnit: BaseUnitEnum,
-        image: Data?
-    ){
-        let newProduct = ProductModel(
+        image: Data? = nil
+    ) {
+        let product = ProductModel(
             name: name,
             price: price,
             available: available,
@@ -71,20 +70,13 @@ final class ProductViewModel: ObservableObject {
             baseUnit: baseUnit,
             image: image
         )
-        productService.createProduct(newProduct)
+        productService.createProduct(product)
         loadAllProducts()
     }
     
-    /// Edita un producto existente con nuevos valores y guarda los cambios.
+    /// Actualiza un producto existente en la base de datos y refresca la lista.
     ///
-    /// - Parameters:
-    ///   - product: Producto a editar.
-    ///   - name: Nuevo nombre del producto.
-    ///   - price: Nuevo precio del producto.
-    ///   - available: Nueva disponibilidad.
-    ///   - presentation: Nueva presentación.
-    ///   - baseUnit: Nueva unidad de medida base.
-    ///   - image: Nueva imagen, opcional.
+    /// - Parameter product: Producto actualizado.
     func editProduct(
         product: ProductModel,
         name: String,
@@ -92,8 +84,9 @@ final class ProductViewModel: ObservableObject {
         available: Bool,
         presentation: PresentationEnum,
         baseUnit: BaseUnitEnum,
-        image: Data?
-    ){
+        image: Data? = nil
+    ) {
+        // Actualiza el producto con los nuevos valores.
         product.name = name
         product.price = price
         product.available = available
@@ -101,19 +94,18 @@ final class ProductViewModel: ObservableObject {
         product.baseUnit = baseUnit
         product.image = image
         
-        productService.updateProduct()
+        // Llama al servicio para actualizar el producto específico.
+        productService.updateProduct(product)
+        
+        // Recarga la lista de productos después de la actualización.
         loadAllProducts()
     }
     
     /// Elimina un producto de la base de datos y actualiza la lista.
     ///
     /// - Parameter product: Producto que se desea eliminar.
-    func removeProduct(product: ProductModel){
+    func removeProduct(_ product: ProductModel) {
         productService.deleteProduct(product)
         loadAllProducts()
     }
 }
-
-// SUGERENCIA:
-// Sería recomendable manejar errores de servicio (create/update/delete) desde el ViewModel
-// para que puedas mostrar alertas o mensajes de error a los usuarios, en lugar de depender solo de prints en consola.

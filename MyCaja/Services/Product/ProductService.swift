@@ -12,7 +12,7 @@ import Foundation
 ///
 /// Todas las operaciones se ejecutan en el hilo principal (`@MainActor`) para mantener la sincronización con la interfaz de usuario.
 @MainActor
-final class ProductService {
+final class ProductService: ProductServiceProtocol {
     
     /// Contexto de datos utilizado para realizar operaciones sobre el modelo.
     let context: ModelContext
@@ -38,7 +38,7 @@ final class ProductService {
     }
     
     /// Guarda los cambios realizados en el contexto, típicamente después de actualizar un producto.
-    func updateProduct(){
+    func updateProduct(_ product: ProductModel){
         do {
             try context.save()
         } catch {
@@ -97,12 +97,4 @@ final class ProductService {
     }
 }
 
-// SUGERENCIA:
-// - Se recomienda marcar `randomProductName` como `private` para evitar su acceso externo no intencionado.
-// - Podrías manejar los errores con un sistema de logs más estructurado o un servicio de alertas si es un entorno de producción.
-
-
-// SUGERENCIA:
-// - Considerar el manejo de errores de manera más robusta, por ejemplo, mostrando alertas al usuario si las operaciones fallan.
-// - En `generateMockProducts`, podrías hacer la creación de productos asincrónica si se generan muchos registros, para no bloquear la UI.
 
