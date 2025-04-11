@@ -29,9 +29,22 @@
 		D021F6ED2D9DE10500F9D57D /* MyCajaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyCajaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		D0D296552DA6FB41001770A0 /* Exceptions for "MyCaja" folder in "MyCaja" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = D021F6D02D9DE10100F9D57D /* MyCaja */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D021F6D32D9DE10100F9D57D /* MyCaja */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D0D296552DA6FB41001770A0 /* Exceptions for "MyCaja" folder in "MyCaja" target */,
+			);
 			path = MyCaja;
 			sourceTree = "<group>";
 		};
@@ -398,6 +411,8 @@
 				DEVELOPMENT_ASSET_PATHS = "\"MyCaja/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MyCaja/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Necesitamos acceso a tu galería para seleccionar una imagen para el producto.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -426,6 +441,8 @@
 				DEVELOPMENT_ASSET_PATHS = "\"MyCaja/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MyCaja/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Necesitamos acceso a tu galería para seleccionar una imagen para el producto.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

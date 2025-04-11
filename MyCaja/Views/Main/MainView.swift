@@ -22,7 +22,7 @@ struct MainView: View {
                     case .home:
                         HomeView()
                     case .product:
-                        ProductLsitView()
+                        ProductListView()
                     case .sale:
                         SaleView()
                     case .salesHistory:
@@ -38,20 +38,20 @@ struct MainView: View {
                         }
                     }
                 }
-                SideMenuView(isMenuOpen: $isMenuOpen, selectedScreen: $selectedScreen)
             }
-            .gesture(DragGesture().onEnded{
-                value in if value.translation.width > 50 {
-                    withAnimation{
-                        isMenuOpen = true
-                    }
-                } else if value.translation.width < -50 {
-                    withAnimation{
-                        isMenuOpen = false
-                    }
-                }
-            })
+            SideMenuView(isMenuOpen: $isMenuOpen, selectedScreen: $selectedScreen)
         }
+        .gesture(DragGesture().onEnded{
+            value in if value.translation.width > 50 {
+                withAnimation{
+                    isMenuOpen = true
+                }
+            } else if value.translation.width < -50 {
+                withAnimation{
+                    isMenuOpen = false
+                }
+            }
+        })
     }
 }
 
