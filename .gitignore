@@ -1,0 +1,5 @@
+# Archivos específicos de Xcode
+*.xcuserstate
+*.xcuserdata
+*.xcodeproj/project.xcworkspace/xcuserdata/
+
