@@ -22,18 +22,27 @@ final class ProductService {
         do {
             try context.save()
         } catch {
-            fatalError(error.localizedDescription)
+            //fatalError(error.localizedDescription)
+            print("Error al crear el producto: \(error.localizedDescription)")
         }
         
     }
     
-    func deleteProduct(_ product: ProductModel){
-        context.delete(product)
-        try? context.save()
+    func updateProduct(){
+        do {
+            try context.save()
+        } catch {
+            print("Error al actualizar el producto: \(error.localizedDescription)")
+        }
     }
     
-    func updateProduct(){
-        try? context.save()
+    func deleteProduct(_ product: ProductModel){
+        context.delete(product)
+        do {
+            try context.save()
+        } catch {
+            print("Error al eliminar el producto: \(error.localizedDescription)")
+        }
     }
     
     func fetchAllProducts() -> [ProductModel]{

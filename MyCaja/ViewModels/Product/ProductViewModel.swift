@@ -26,6 +26,16 @@ final class ProductViewModel: ObservableObject {
         
     }
     
+    func loadAllProducts(){
+        products = productService.fetchAllProducts()
+    }
+    
+    func generateMockData(){
+        productService.generateMockProducts(count: 5)
+        loadAllProducts()
+    }
+    
+    
     func addProduct(name: String, price: Double, available: Bool, presentation: PresentationEnum, baseUnit: BaseUnitEnum, image: Data?){
         let newProduct = ProductModel(
             name: name,
@@ -39,15 +49,22 @@ final class ProductViewModel: ObservableObject {
         loadAllProducts()
     }
     
-    func loadAllProducts(){
-        products = productService.fetchAllProducts()
-    }
-    
-    func generateMockData(){
-        productService.generateMockProducts(count: 5)
+    func editProduct(product: ProductModel, name: String, price: Double, available: Bool, presentation: PresentationEnum, baseUnit: BaseUnitEnum, image: Data?){
+        product.name = name
+        product.price = price
+        product.available = available
+        product.presentation = presentation
+        product.baseUnit = baseUnit
+        product.image = image
+        
+        productService.updateProduct()
         loadAllProducts()
     }
     
+    func removeProduct(product: ProductModel){
+        productService.deleteProduct(product)
+        loadAllProducts()
+    }
     
 }
 

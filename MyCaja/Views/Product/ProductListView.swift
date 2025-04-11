@@ -16,6 +16,7 @@ struct ProductListView: View {
     @StateObject private var viewModel: ProductViewModel
     
     @State private var showingAddProduct = false
+    @State private var selectedProduct: ProductModel? = nil
     
     init(){
         _viewModel = StateObject(wrappedValue: ProductViewModel(context: SwiftDataStack.shared.container.mainContext))
@@ -32,7 +33,10 @@ struct ProductListView: View {
                 } else {
                     ScrollView {
                         LazyVStack(spacing:16){
-                            ForEach(viewModel.products){ product in ProductCardView(product: product)
+                            ForEach(viewModel.products){ product in ProductCardView(product: product).onTapGesture {
+                                        selectedProduct = product
+                               // print(selectedProduct?.name)
+                                    }
                             }
                         }
                         .padding()
@@ -54,6 +58,8 @@ struct ProductListView: View {
             }
             .sheet(isPresented: $showingAddProduct){
                 AddProductView(viewModel: viewModel, isPresented: $showingAddProduct)
+            }
+            .sheet(item: $selectedProduct){ product in EditProductView(product: product, viewModel: viewModel)
             }
             .onAppear{
                 viewModel.loadAllProducts()

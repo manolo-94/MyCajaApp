@@ -18,7 +18,7 @@ struct ProductCardView: View {
             VStack(alignment: .leading, spacing: 8){
                 Text(product.name).font(.title3).bold()
                 /*Text(String(format: "$ %.2f",*/
-                Text(String(product.price)).font(.subheadline).foregroundStyle(Color.secondary)
+                Text(String(format: "%.2f",product.price)).font(.subheadline).foregroundStyle(Color.secondary)
                 
                 Text("Presentación: \(product.presentation.rawValue)").font(.caption).foregroundStyle(Color.gray)
                 Text("Unidad: \(product.baseUnit.rawValue)").font(.caption2).foregroundStyle(Color.gray)
