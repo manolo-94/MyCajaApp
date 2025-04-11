@@ -27,7 +27,7 @@ struct AddProductView: View {
     
     @State private var showToast = false
     @State private var toastMessage = ""
-    @State private var shoeError = false
+    @State private var showError = false
     
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var selectedAsset: PhotosPickerItem? = nil
@@ -72,18 +72,6 @@ struct AddProductView: View {
                 }
             }
             .navigationTitle("Nuevo Producto")
-            /*
-             .alert("Error", isPresented: $showAlert){
-             Button("Ok", role: .cancel){}
-             } message: {
-             Text(alertMessage)
-             }
-             .alert("Guardado exitosamente!", isPresented: $showSuccessAlert){
-             Button("Ok"){
-             isPresented = false
-             }
-             }
-             */
             .toolbar{
                 ToolbarItem(placement: .topBarLeading){
                     Button("Cancelar"){
@@ -107,7 +95,7 @@ struct AddProductView: View {
                     HStack{
                         Text(toastMessage).foregroundStyle(Color.white)
                             .padding()
-                            .background(shoeError ? Color.red : Color.green)
+                            .background(showError ? Color.red : Color.green)
                             .cornerRadius(12)
                             .shadow(radius: 10)
                     }
@@ -121,7 +109,7 @@ struct AddProductView: View {
 
     
     private func saveProduct(){
-        guard !name.isEmpty else {
+        guard !name.isEmpty || !price.isEmpty else {
             //alertMessage = "Por favor ingrese un precio válido"
             //showAlert = true
             showTemporaryToast(message: "Por favor complete todos los campos", isError: true)
@@ -157,7 +145,7 @@ struct AddProductView: View {
     private func showTemporaryToast(message: String, isError: Bool){
         
         toastMessage = message
-        shoeError = isError
+        showError = isError
         withAnimation{
             showToast = true
         }
