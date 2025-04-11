@@ -55,6 +55,8 @@ struct EditProductView: View {
                     // Campo para editar el precio del producto, con teclado numérico
                     TextField("Precio", text: $price).keyboardType(.decimalPad)
                     
+                    Toggle("Disponible", isOn: $available)
+                    
                     // Selector para elegir la presentación del producto
                     Picker("Presentación", selection: $presentation){
                         ForEach(PresentationEnum.allCases, id: \.self){
