@@ -32,6 +32,8 @@ struct AddProductView: View {
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var selectedAsset: PhotosPickerItem? = nil
     
+    @State private var showSaveAlert: Bool = false
+    
     var body: some View {
         NavigationStack{
             Form{
@@ -81,12 +83,21 @@ struct AddProductView: View {
                 }
                 ToolbarItem(placement: .topBarLeading){
                     Button(action:{
-                        saveProduct()
+                        showSaveAlert = true
                     }){
                         Text("Guardar")
                     }
                     .disabled(name.isEmpty || price.isEmpty)
                 }
+            }
+            
+            .alert("Nuevo Producto", isPresented: $showSaveAlert) {
+                Button("Cancelar", role: .cancel) {}
+                Button("Guardar", role: .destructive) {
+                    saveProduct()
+                }
+            } message: {
+                Text("¿Esta seguro de crear un nuevo producto?")
             }
             // --- Toast View ---
             if showToast {
