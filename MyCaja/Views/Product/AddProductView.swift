@@ -12,7 +12,7 @@ import PhotosUI
 struct AddProductView: View {
     
     //@Environment(\.dismiss) var dismiss
-    @ObservedObject var viewModel: ProductViewModel  // ViewModel que maneja la lógica para agregar productos.
+    @ObservedObject var viewModel: ProductAdminViewModel  // ViewModel que maneja la lógica para agregar productos.
     @Binding var isPresented: Bool  // Binding para controlar si la vista de agregar producto está activa o no.
     
     // Estado para almacenar la información del nuevo producto.

@@ -17,7 +17,7 @@ struct ProductListView: View {
     @Environment(\.modelContext) private var context
     
     /// ViewModel que gestiona la lógica de productos.
-    @StateObject private var viewModel: ProductViewModel
+    @StateObject private var viewModel: ProductAdminViewModel
     
     /// Controla la presentación de la vista para agregar un nuevo producto.
     @State private var showingAddProduct = false
@@ -29,7 +29,7 @@ struct ProductListView: View {
     init() {
         let context = SwiftDataStack.shared.container.mainContext
         let productService = ProductService(context: context)
-        _viewModel = StateObject(wrappedValue: ProductViewModel(productService: productService))
+        _viewModel = StateObject(wrappedValue: ProductAdminViewModel(productService: productService))
     }
     
     var body: some View {

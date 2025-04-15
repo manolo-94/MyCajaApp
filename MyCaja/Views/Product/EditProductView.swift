@@ -11,7 +11,7 @@ import PhotosUI
 /// Vista para editar un producto existente.
 struct EditProductView: View {
     @Environment(\.dismiss) var dismiss  // Permite cerrar la vista
-    @ObservedObject var viewModel: ProductViewModel  // Vista Modelo de Producto
+    @ObservedObject var viewModel: ProductAdminViewModel  // Vista Modelo de Producto
     
     var product: ProductModel  // Producto a editar
     @State private var name: String  // Nombre del producto
@@ -31,7 +31,7 @@ struct EditProductView: View {
     @State private var showDeleteAlert: Bool = false  // Estado para mostrar la alerta de eliminar producto
     
     /// Inicializa la vista de edición con un producto existente.
-    init (product: ProductModel, viewModel: ProductViewModel){
+    init (product: ProductModel, viewModel: ProductAdminViewModel){
         self.product = product
         self.viewModel = viewModel
         
