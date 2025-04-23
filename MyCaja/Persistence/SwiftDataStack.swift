@@ -19,7 +19,9 @@ final class SwiftDataStack {
     private init(){
         // Definición del esquema de la base de datos.
         let schema = Schema([
-            ProductModel.self
+            ProductModel.self,
+            SaleModel.self,
+            SaleDetailModel.self,
             // SaleModel
             // UserModel
             // Agregamos aquí todos los modelos que se utilizarán en la base de datos.
