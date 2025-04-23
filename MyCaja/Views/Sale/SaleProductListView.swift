@@ -42,6 +42,7 @@ struct SaleProductListView: View {
                 }
             }
         }
+        /*
         .overlay(
             Group {
                 if let toast = cartViewModel.toast {
@@ -57,7 +58,7 @@ struct SaleProductListView: View {
                 }
             },
             alignment: .top
-        )
+        )*/
     }
 }
 

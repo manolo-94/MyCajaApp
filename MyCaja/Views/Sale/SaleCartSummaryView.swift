@@ -9,8 +9,9 @@ import SwiftUI
 
 struct SaleCartSummaryView: View {
     
-    @ObservedObject var cartViewModel: CartViewModel
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
+    @ObservedObject var cartViewModel: CartViewModel
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -94,7 +95,8 @@ struct SaleCartSummaryView: View {
         }
         .overlay(
             Group {
-                if let toast = cartViewModel.toast {
+                // validamos el tipo de pantalla para poder mostrar el toast en el SaleCartSummaryView cuando esta en dispositivos iPhone.
+                if horizontalSizeClass == .compact, let toast = cartViewModel.toast {
                     ToastView(toast: toast)
                         .transition(.move(edge: .top).combined(with: .opacity))
                         .onAppear {
@@ -108,6 +110,7 @@ struct SaleCartSummaryView: View {
             },
             alignment: .top
         )
+
 
     }
 }
