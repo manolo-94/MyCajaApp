@@ -10,7 +10,7 @@ import Foundation
 @MainActor
 protocol SaleServiceProtocol {
     func fetchAllSales() -> [SaleModel]
-    func saveSale(_ sale: SaleModel)
+    func saveSale(_ sale: SaleModel) throws
     func updateSaleStatus(sale: SaleModel, newStatus: SaleStatusEnum)
     
 }

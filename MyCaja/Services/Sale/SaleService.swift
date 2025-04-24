@@ -27,6 +27,13 @@ class SaleService: SaleServiceProtocol {
     // Funcion para guardar una venta en la base de datos
     func saveSale(_ sale: SaleModel) {
         print("Guardamos la venta")
+        context.insert(sale)
+        do {
+            try context.save()
+        } catch {
+            // Se maneja el error de forma controlada, evitando el uso de fatalError en producción.
+            print("Error al guardar la venta: \(error.localizedDescription)")
+        }
     }
     
     // Funcion para actualizar el estado de una venta

@@ -19,6 +19,8 @@ final class CartViewModel: ObservableObject {
     
     @Published var toast: ToastModel?
     
+    @Published var changeToReturn: Double? = nil
+    
     init(saleService: SaleServiceProtocol) {
         self.saleService = saleService
     }
@@ -76,17 +78,33 @@ final class CartViewModel: ObservableObject {
         carItems.removeAll()
     }
     
-    func registerSale(details: [SaleDetailModel], method: PaymentMethodsEnum) {
+    func registerSale(details: [SaleDetailModel], method: PaymentMethodsEnum, amountPaid: Double) throws -> Double {
+        
+        let total = calculateTotal()
+        
+        guard amountPaid >= total else {
+            throw NSError(domain: "", code: 1, userInfo: [NSLocalizedDescriptionKey: "El monto pagado es menor al total."])
+        }
         
         let sale = SaleModel(
             paymentMethod: method,
             status: .completed,
-            total: details.reduce(0) { $0 + $1.subTotal},
+            total: total,
             details: details
         )
-        print("Venta guardada")
-        saleService.saveSale(sale)
+        
+       try saleService.saveSale(sale)
+            
+        print("Venta registrada con éxito.")
+        toast = ToastModel(message: "Venta registrada con éxito.", type: .success)
+            
         clearCart()
+        
+        let change = amountPaid - total
+        
+        return change
+        
+        
     }
     
     func isBulkProduct(_ product: ProductModel) -> Bool {
