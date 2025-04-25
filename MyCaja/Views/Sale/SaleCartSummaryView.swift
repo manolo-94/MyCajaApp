@@ -10,6 +10,8 @@ import SwiftUI
 struct SaleCartSummaryView: View {
     
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Environment(\.dismiss) var dismiss
+
     
     @ObservedObject var cartViewModel: CartViewModel
     
@@ -76,6 +78,10 @@ struct SaleCartSummaryView: View {
             HStack {
                 Button("Cancelar") {
                     cartViewModel.clearCart()
+                    
+                    if horizontalSizeClass == .compact {
+                        dismiss()// Solo cerramos la vista si es iPhone (modo compacto)
+                    }
                 }
                 .foregroundStyle(Color.red)
                 
@@ -86,9 +92,23 @@ struct SaleCartSummaryView: View {
                     showingPaymentSheet = true
                 }
                 .buttonStyle(.borderedProminent)
+                .disabled(cartViewModel.carItems.isEmpty)
             }
         }
         .padding()
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    dismiss()
+                }) {
+                    HStack {
+                        Image(systemName: "chevron.left")
+                        Text("Regresar")
+                    }
+                }
+            }
+        }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .sheet(isPresented: $cartViewModel.showEditSheet){
             if let item = cartViewModel.itemBeingEdited {
@@ -101,90 +121,30 @@ struct SaleCartSummaryView: View {
             }
         }
         .sheet(isPresented: $showingPaymentSheet) {
-            VStack(spacing: 20) {
-                Text("Confirmar Pago")
-                    .font(.title2.bold())
-                
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Total a pagar")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-
-                    Text("$\(cartViewModel.calculateTotal(), specifier: "%.2f")")
-                        .font(.title.bold())
-                        .foregroundColor(.green)
-                }
-
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Cantidad pagada")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-
-                    TextField("Ej. 200.00", text: $amountPaid)
-                        .keyboardType(.decimalPad)
-                        .padding()
-                        .background(Color(.systemGray6))
-                        .cornerRadius(8)
-                }
-
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Método de pago")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-
-                    Picker("Método de pago", selection: $selectedPaymentMethod) {
-                        ForEach(PaymentMethodsEnum.allCases, id: \.self) { method in
-                            Text(method.rawValue)
-                        }
+            SalePaymentView(
+                total: cartViewModel.calculateTotal(),
+                selectedPaymentMethod: $selectedPaymentMethod,
+                amountPaid: $amountPaid,
+                onConfirm: { amount in
+                    do {
+                        let _ = try cartViewModel.registerSale(
+                            details: cartViewModel.carItems,
+                            method: selectedPaymentMethod,
+                            amountPaid: amount
+                        )
+                        showingPaymentSheet = false
+                        amountPaid = ""
+                    } catch {
+                        print("Error al registrar la venta: \(error.localizedDescription)")
+                        localToast = ToastModel(message: error.localizedDescription, type: .error)
+                        
                     }
-                    .pickerStyle(.segmented)
-                }
-
-                // Mostrar el cambio si el pago es válido
-                if let amount = Double(amountPaid),
-                   amount >= cartViewModel.calculateTotal() && selectedPaymentMethod == .cash{
-                    let change = amount - cartViewModel.calculateTotal()
-                    Text("Cambio: $\(change, specifier: "%.2f")")
-                        .font(.headline)
-                        .foregroundColor(.blue)
-                        .padding(.top, 10)
-                }
-
-                Button(action: {
-                    if let amount = Double(amountPaid) {
-                        do {
-                            let _ = try cartViewModel.registerSale(
-                                details: cartViewModel.carItems,
-                                method: selectedPaymentMethod,
-                                amountPaid: amount
-                            )
-                            showingPaymentSheet = false
-                        } catch {
-                            print("Error al registrar la venta: \(error.localizedDescription)")
-                            localToast = ToastModel(message: error.localizedDescription, type: .error)
-                            
-                        }
-                    }
-                }) {
-                    HStack {
-                        Image(systemName: "checkmark.circle.fill")
-                        Text("Confirmar pago")
-                            .fontWeight(.semibold)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                }
-
-                Button("Cancelar", role: .cancel) {
+                },
+                onCancel: {
                     showingPaymentSheet = false
                 }
-            }
-            .padding()
-            
-            // Mostramos el toast solo en el sheet
+            )
+            // Este toast se usa para mostrar un mensaje en la vista SalePaymentView
             if let toast = localToast {
                 ToastView(toast: toast)
                     .transition(.move(edge: .top).combined(with: .opacity))

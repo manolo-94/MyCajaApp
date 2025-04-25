@@ -74,7 +74,7 @@ final class CartViewModel: ObservableObject {
     
     func clearCart() {
        //print("Se limpio el carrito")
-       toast = ToastModel(message: "Se limpio el carrito", type: .success)
+       //toast = ToastModel(message: "Se limpio el carrito", type: .success)
         carItems.removeAll()
     }
     

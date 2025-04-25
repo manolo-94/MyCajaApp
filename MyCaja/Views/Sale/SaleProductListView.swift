@@ -42,23 +42,6 @@ struct SaleProductListView: View {
                 }
             }
         }
-        /*
-        .overlay(
-            Group {
-                if let toast = cartViewModel.toast {
-                    ToastView(toast: toast)
-                        .transition(.move(edge: .top).combined(with: .opacity))
-                        .onAppear {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                withAnimation {
-                                    cartViewModel.toast = nil
-                                }
-                            }
-                        }
-                }
-            },
-            alignment: .top
-        )*/
     }
 }
 
