@@ -21,6 +21,8 @@ final class CartViewModel: ObservableObject {
     
     @Published var changeToReturn: Double? = nil
     
+    //@Published var lastSaleItems: [SaleDetailModel] = []
+    
     init(saleService: SaleServiceProtocol) {
         self.saleService = saleService
     }
@@ -97,8 +99,9 @@ final class CartViewModel: ObservableObject {
             
         print("Venta registrada con éxito.")
         toast = ToastModel(message: "Venta registrada con éxito.", type: .success)
-            
-        clearCart()
+        
+        //lastSaleItems = carItems
+        //clearCart()
         
         let change = amountPaid - total
         

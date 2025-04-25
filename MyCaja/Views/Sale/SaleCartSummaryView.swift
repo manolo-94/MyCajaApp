@@ -21,6 +21,9 @@ struct SaleCartSummaryView: View {
     
     @State private var localToast: ToastModel? = nil
     
+    @State private var showTicket = false
+    @State private var lastAmountPaid: Double = 0.0
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Carrito").font(.title.bold()).padding()
@@ -121,41 +124,10 @@ struct SaleCartSummaryView: View {
             }
         }
         .sheet(isPresented: $showingPaymentSheet) {
-            SalePaymentView(
-                total: cartViewModel.calculateTotal(),
-                selectedPaymentMethod: $selectedPaymentMethod,
-                amountPaid: $amountPaid,
-                onConfirm: { amount in
-                    do {
-                        let _ = try cartViewModel.registerSale(
-                            details: cartViewModel.carItems,
-                            method: selectedPaymentMethod,
-                            amountPaid: amount
-                        )
-                        showingPaymentSheet = false
-                        amountPaid = ""
-                    } catch {
-                        print("Error al registrar la venta: \(error.localizedDescription)")
-                        localToast = ToastModel(message: error.localizedDescription, type: .error)
-                        
-                    }
-                },
-                onCancel: {
-                    showingPaymentSheet = false
-                }
-            )
-            // Este toast se usa para mostrar un mensaje en la vista SalePaymentView
-            if let toast = localToast {
-                ToastView(toast: toast)
-                    .transition(.move(edge: .top).combined(with: .opacity))
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            withAnimation {
-                                localToast = nil
-                            }
-                        }
-                    }
-            }
+            paymentSheetContent()
+        }
+        .fullScreenCover(isPresented: $showTicket) {
+            ticketView()
         }
 
         .overlay(
@@ -174,6 +146,66 @@ struct SaleCartSummaryView: View {
                 }
             },
             alignment: .top
+        )
+    }
+    
+    @ViewBuilder
+    private func paymentSheetContent() -> some View {
+        SalePaymentView(
+            total: cartViewModel.calculateTotal(),
+            selectedPaymentMethod: $selectedPaymentMethod,
+            amountPaid: $amountPaid,
+            onConfirm: { amount in
+                do {
+                    let _ = try cartViewModel.registerSale(
+                        details: cartViewModel.carItems,
+                        method: selectedPaymentMethod,
+                        amountPaid: amount
+                    )
+                    showingPaymentSheet = false
+                    lastAmountPaid = amount
+                    amountPaid = ""
+                    
+                    // Mostramos el ticket
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        showTicket = true
+                    }
+                } catch {
+                    print("Error al registrar la venta: \(error.localizedDescription)")
+                    localToast = ToastModel(message: error.localizedDescription, type: .error)
+                    
+                }
+            },
+            onCancel: {
+                showingPaymentSheet = false
+            }
+        )
+        // Este toast se usa para mostrar un mensaje en la vista SalePaymentView
+        if let toast = localToast {
+            ToastView(toast: toast)
+                .transition(.move(edge: .top).combined(with: .opacity))
+                .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        withAnimation {
+                            localToast = nil
+                        }
+                    }
+                }
+        }
+    }
+    
+    @ViewBuilder
+    private func ticketView() -> some View {
+        SaleTicketView(
+            saleItems: cartViewModel.carItems,
+            total: cartViewModel.calculateTotal(),
+            paymentMethod: selectedPaymentMethod,
+            amountPaid: lastAmountPaid,
+            cartViewModel: cartViewModel,
+            onFinish: {
+                showTicket = false
+                dismiss()
+            }
         )
     }
 }
