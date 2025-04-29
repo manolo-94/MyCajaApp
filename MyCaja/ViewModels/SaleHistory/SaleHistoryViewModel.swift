@@ -27,28 +27,33 @@ final class SaleHistoryViewModel: ObservableObject {
         loadGroupedSales()
     }
     
+    // Agrupa todas las ventas por fecha
     func loadGroupedSales(){
         groupedSales = saleHistoryService.fetchSalesGroupedByDate()
     }
     
+    // Obtiene el total de cuanto se vendio en una fecha
     func totalFor(date: Date) -> Double {
         return saleHistoryService.getTotalSales(for: date)
     }
     
+    // Obtiene el total de cuantas ventas se realizaron en una fecha
     func numberOfSales(for date: Date) -> Int {
         return saleHistoryService.getNumberOfSales(for: date)
     }
     
+    // Obtiene todas las ventas de una fecha
     func fetchSalesForDate(_ date:Date) {
         let sales = saleHistoryService.getSalesInRange(from: date, to: date)
         
-        filteredSales = sales.sorted(by: {$0.date > $1.date})
+        filteredSales = sales.sorted(by: {$0.date > $1.date}) // Ordena las fechas de manera descendete
         
         displaySales =  Array(filteredSales.prefix(pageSize))
         
         currentePage = 1
     }
     
+    // Cargamos mas ventas haciendo un scroll infinito
     func loadMoreSalesIfNeeded(currentSale: SaleModel) {
         guard !isloadingMore, hasMoreSales else { return }
         
@@ -61,6 +66,7 @@ final class SaleHistoryViewModel: ObservableObject {
     
     private func loadMoreSales() {
         
+        // Activa el Spiner
         isloadingMore = true
         print("Cargando....")
         
@@ -82,6 +88,7 @@ final class SaleHistoryViewModel: ObservableObject {
                 
             }
             
+            // Desactiva el Spiner
             self.isloadingMore = false
             print("Carga Finalizada....")
             

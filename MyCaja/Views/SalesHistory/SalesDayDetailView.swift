@@ -15,7 +15,7 @@ struct SalesDayDetailView: View {
     var body: some View {
         ScrollView {
             LazyVStack(spacing: 16) {
-                ForEach(saleHistoryViewModel.filteredSales, id: \.id) { sale in
+                ForEach(saleHistoryViewModel.displaySales, id: \.id) { sale in
                     
                     SaleDayDetailCardView(sale: sale, onClick: {
                         //print("Hola!!!")
