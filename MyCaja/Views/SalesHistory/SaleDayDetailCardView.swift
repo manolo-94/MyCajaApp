@@ -7,21 +7,19 @@
 
 import SwiftUI
 
-struct SaleHistoryCardView: View {
+struct SaleDayDetailCardView: View {
     
-    var date: Date
-    var total: Double
-    var numberOfSale: Int
-    
+    var sale: SaleModel
     var onClick:() -> Void
     
     var body: some View {
         HStack(alignment: .center, spacing: 16) {
             VStack(alignment: .leading, spacing: 8) {
-                Text(formattedDate(date)).font(.title2).bold()
+                Text(formattedDate(sale.date)).font(.title2).bold()
                 
-                Text("Total vendido: \(total, specifier: "%.2f")$")
-                Text("Numero de ventas: \(numberOfSale)$")
+                Text("Venta: \(sale.id.uuidString.prefix(8))")
+                Text("Monto total: \(sale.total, specifier: "%.2f")")
+                Text("Metodo de pago: \(sale.paymentMethod.description)")
             }
             .onTapGesture {
                 //print(formattedDate(date))

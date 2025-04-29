@@ -8,11 +8,44 @@
 import SwiftUI
 
 struct SalesDayDetailView: View {
+    
+    @ObservedObject var saleHistoryViewModel: SaleHistoryViewModel
+    var date: Date
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView {
+            LazyVStack(spacing: 16) {
+                ForEach(saleHistoryViewModel.filteredSales, id: \.id) { sale in
+                    
+                    SaleDayDetailCardView(sale: sale, onClick: {
+                        //print("Hola!!!")
+                    })
+                    .onAppear {
+                        saleHistoryViewModel.loadMoreSalesIfNeeded(currentSale: sale)
+                    }
+                }
+                
+                if saleHistoryViewModel.isloadingMore {
+                    ProgressView().padding()
+                } else if !saleHistoryViewModel.hasMoreSales {
+                    Text("No hay más ventas para mostrar")
+                        .foregroundStyle(Color.gray)
+                        .padding()
+                        .font(.subheadline)
+                }
+            }
+            .padding()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .onAppear {
+            saleHistoryViewModel.fetchSalesForDate(date)
+        }
+        
     }
-}
-
-#Preview {
-    SalesDayDetailView()
+    
+    private func formattedDate(_ date:Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        return formatter.string(from: date)
+    }
 }

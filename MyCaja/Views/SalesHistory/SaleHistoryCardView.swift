@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SalesHistoryListView: View {
+struct SaleHistoryCardView: View {
     
     var date: Date
     var total: Double

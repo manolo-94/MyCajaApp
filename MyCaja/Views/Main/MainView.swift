@@ -26,7 +26,7 @@ struct MainView: View {
                     case .sale:
                         SaleView()
                     case .salesHistory:
-                        SalesHistoryListView()
+                        SalesHistoryView()
                     }
                 }
                 .navigationTitle(selectedScreen.rawValue).toolbar {

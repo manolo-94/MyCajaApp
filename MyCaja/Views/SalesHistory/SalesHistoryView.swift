@@ -7,9 +7,12 @@
 
 import SwiftUI
 
-struct SalesHistoryListView: View {
+struct SalesHistoryView: View {
     
     @StateObject private var saleHistoryViewModel: SaleHistoryViewModel
+ 
+    @State private var isNavigating: Bool = false
+    @State private var selectedDate: Date? = nil
     
     init() {
         let context = SwiftDataStack.shared.container.mainContext
@@ -20,7 +23,7 @@ struct SalesHistoryListView: View {
     }
     
     private var sortedDate: [Date] {
-        saleHistoryViewModel.groupedSales.keys.sorted()
+        saleHistoryViewModel.groupedSales.keys.sorted(by: {$0 > $1})
     }
     
     var body: some View {
@@ -35,30 +38,34 @@ struct SalesHistoryListView: View {
                 ScrollView {
                     LazyVStack(spacing: 16) {
                         
-                        let sortedDate = saleHistoryViewModel.groupedSales.keys.sorted(by: { $0 < $1 })
+                        //let sortedDate = saleHistoryViewModel.groupedSales.keys.sorted(by: { $0 < $1 })
                         ForEach(sortedDate, id: \.self) { date in
                             
-                            Section(header: Text(formattedDate(date))){
-                                VStack(alignment: .leading) {
-                                    Text("Total en ventas: \(saleHistoryViewModel.totalFor(date: date), specifier: "%.2f")$")
-                                    Text("Numero de ventas: \(saleHistoryViewModel.numberOfSales(date: date))$")
+                            SaleHistoryCardView(
+                                date: date,
+                                total: saleHistoryViewModel.totalFor(date: date),
+                                numberOfSale: saleHistoryViewModel.numberOfSales(for: date),
+                                onClick: {
+                                    //print(date)
+                                    //saleHistoryViewModel.fetchSalesForDate(date)
+                                    selectedDate = date
+                                    isNavigating = true
                                 }
-                                .padding()
-                                .background(RoundedRectangle(cornerRadius:8).fill(Color.gray.opacity(0.1)))
-                                
-                            }
+                            )
                             
                         }
                     }
+                    .navigationDestination(isPresented: $isNavigating) {
+                        if let selectedDate = selectedDate {
+                            SalesDayDetailView(saleHistoryViewModel: saleHistoryViewModel, date: selectedDate)
+                        }
+                        
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity)
                 }
             }
         }
-    }
-    
-    private func formattedDate(_ date:Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        return formatter.string(from: date)
     }
 }
 
