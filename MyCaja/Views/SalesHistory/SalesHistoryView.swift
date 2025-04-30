@@ -22,49 +22,71 @@ struct SalesHistoryView: View {
         _saleHistoryViewModel = StateObject(wrappedValue: SaleHistoryViewModel(saleHistoryService: saleHistoryService))
     }
     
+    // Ordenamos las ventas por fecha
     private var sortedDate: [Date] {
-        saleHistoryViewModel.groupedSales.keys.sorted(by: {$0 > $1})
+        saleHistoryViewModel.displayGroupedSales.keys.sorted(by: {$0 > $1})
     }
     
     var body: some View {
         VStack {
-            if saleHistoryViewModel.groupedSales.isEmpty {
-                Spacer()
-                Text("No hay ventas registradas.")
-                    .font(.headline)
-                    .foregroundStyle(Color.black)
-                Spacer()
+            
+            // Mostramos un Spiner mientras se cargan la info
+            if  saleHistoryViewModel.isloadingMore {
+                ProgressView().padding()
             } else {
-                ScrollView {
-                    LazyVStack(spacing: 16) {
-                        
-                        //let sortedDate = saleHistoryViewModel.groupedSales.keys.sorted(by: { $0 < $1 })
-                        ForEach(sortedDate, id: \.self) { date in
+                
+                if saleHistoryViewModel.displayGroupedSales.isEmpty {
+                    Spacer()
+                    Text("No hay ventas registradas.")
+                        .font(.headline)
+                        .foregroundStyle(Color.black)
+                    Spacer()
+                } else {
+                    ScrollView {
+                        LazyVStack(spacing: 16) {
                             
-                            SaleHistoryCardView(
-                                date: date,
-                                total: saleHistoryViewModel.totalFor(date: date),
-                                numberOfSale: saleHistoryViewModel.numberOfSales(for: date),
-                                onClick: {
-                                    //print(date)
-                                    //saleHistoryViewModel.fetchSalesForDate(date)
-                                    selectedDate = date
-                                    isNavigating = true
+                            //let sortedDate = saleHistoryViewModel.groupedSales.keys.sorted(by: { $0 < $1 })
+                            ForEach(sortedDate, id: \.self) { date in
+                                
+                                SaleHistoryCardView(
+                                    date: date,
+                                    total: saleHistoryViewModel.totalFor(date: date),
+                                    numberOfSale: saleHistoryViewModel.numberOfSales(for: date),
+                                    onClick: {
+                                        //print(date)
+                                        //saleHistoryViewModel.fetchSalesForDate(date)
+                                        selectedDate = date
+                                        isNavigating = true
+                                    }
+                                )
+                                .onAppear {
+                                    saleHistoryViewModel.loadMoreGroupedSalesIfNeeded(currentDate: date)
                                 }
-                            )
+                                
+                            }
+                            
+                            if saleHistoryViewModel.isloadingMore {
+                                ProgressView().padding()
+                            } else if !saleHistoryViewModel.hasMoreSales {
+                                Text("No hay más ventas para mostrar")
+                                    .foregroundStyle(Color.gray)
+                                    .padding()
+                                    .font(.subheadline)
+                            }
+                        }
+                        .navigationDestination(isPresented: $isNavigating) {
+                            if let selectedDate = selectedDate {
+                                SalesDayDetailView(saleHistoryViewModel: saleHistoryViewModel, date: selectedDate)
+                            }
                             
                         }
+                        .padding()
+                        .frame(maxWidth: .infinity)
                     }
-                    .navigationDestination(isPresented: $isNavigating) {
-                        if let selectedDate = selectedDate {
-                            SalesDayDetailView(saleHistoryViewModel: saleHistoryViewModel, date: selectedDate)
-                        }
-                        
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity)
                 }
+                
             }
+            
         }
     }
 }
