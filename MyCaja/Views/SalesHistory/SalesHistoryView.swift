@@ -31,7 +31,7 @@ struct SalesHistoryView: View {
         VStack {
             
             // Mostramos un Spiner mientras se cargan la info
-            if  saleHistoryViewModel.isloadingMore {
+            if  saleHistoryViewModel.isloadingMoregGroupedSales {
                 ProgressView().padding()
             } else {
                 
@@ -65,9 +65,9 @@ struct SalesHistoryView: View {
                                 
                             }
                             
-                            if saleHistoryViewModel.isloadingMore {
+                            if saleHistoryViewModel.isloadingMoregGroupedSales {
                                 ProgressView().padding()
-                            } else if !saleHistoryViewModel.hasMoreSales {
+                            } else if !saleHistoryViewModel.hasMoreGroupedSales {
                                 Text("No hay más ventas para mostrar")
                                     .foregroundStyle(Color.gray)
                                     .padding()

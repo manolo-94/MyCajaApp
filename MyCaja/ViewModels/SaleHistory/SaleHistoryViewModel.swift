@@ -17,7 +17,9 @@ final class SaleHistoryViewModel: ObservableObject {
     @Published var displaySales: [SaleModel] = []
     
     @Published var isloadingMore: Bool = false
+    @Published var isloadingMoregGroupedSales: Bool = false
     @Published var hasMoreSales: Bool = true
+    @Published var hasMoreGroupedSales: Bool = true
     
     private var currentPageFilterSales = 0
     private var currentPageGroupedSales = 0
@@ -69,7 +71,7 @@ final class SaleHistoryViewModel: ObservableObject {
     
     // Cargamos mas ventas agrupadas por fechas con un Scroll infinito
     func loadMoreGroupedSalesIfNeeded(currentDate: Date) {
-        guard !isloadingMore, hasMoreSales else {return}
+        guard !isloadingMoregGroupedSales, hasMoreGroupedSales else {return}
         
         guard let lastDate = displayGroupedSales.keys.sorted(by: >).last else {return}
         
@@ -94,7 +96,7 @@ final class SaleHistoryViewModel: ObservableObject {
     // Cargamos porciones del array sortedGroupedSales en displayGroupedSales
     private func  loadMoreGroupedSales()
     {
-        isloadingMore = true
+        isloadingMoregGroupedSales = true
         
         // simula un delay de 5 segundos
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -124,10 +126,10 @@ final class SaleHistoryViewModel: ObservableObject {
             }
             
             // detenemos el loading
-            self.isloadingMore = false
+            self.isloadingMoregGroupedSales = false
             
             // Se actuliza si hay mas fechas por cargar
-            self.hasMoreSales = self.displayGroupedSales.count < self.groupedSales.count
+            self.hasMoreGroupedSales = self.displayGroupedSales.count < self.groupedSales.count
             
         }
     }

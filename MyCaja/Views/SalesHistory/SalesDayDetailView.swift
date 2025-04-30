@@ -13,6 +13,7 @@ struct SalesDayDetailView: View {
     var date: Date
     
     var body: some View {
+        
         ScrollView {
             LazyVStack(spacing: 16) {
                 ForEach(saleHistoryViewModel.displaySales, id: \.id) { sale in
