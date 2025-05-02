@@ -12,6 +12,9 @@ struct SalesDayDetailView: View {
     @ObservedObject var saleHistoryViewModel: SaleHistoryViewModel
     var date: Date
     
+    @State var showDetail: Bool = false
+    @State var selectedSale: SaleModel?
+    
     var body: some View {
         
         ScrollView {
@@ -20,6 +23,8 @@ struct SalesDayDetailView: View {
                     
                     SaleDayDetailCardView(sale: sale, onClick: {
                         //print("Hola!!!")
+                        showDetail = true
+                        selectedSale = sale
                     })
                     .onAppear {
                         saleHistoryViewModel.loadMoreSalesIfNeeded(currentSale: sale)
@@ -40,6 +45,17 @@ struct SalesDayDetailView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
             saleHistoryViewModel.fetchSalesForDate(date)
+        }
+        .sheet(isPresented: $showDetail){
+            if let sale = selectedSale {
+                SaleTicketDetailView(
+                    saleItems: sale.details,
+                    total: sale.total,
+                    paymentMethod: sale.paymentMethod,
+                    onFinish: {
+                    showDetail = false
+                })
+            }
         }
         
     }
