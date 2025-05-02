@@ -50,6 +50,8 @@ struct SalesDayDetailView: View {
                     saleItems: sale.details,
                     total: sale.total,
                     paymentMethod: sale.paymentMethod,
+                    amountPaid: sale.amountPaid,
+                    change: sale.change,
                     onFinish: {
                         selectedSale = nil
                 })

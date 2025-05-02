@@ -74,11 +74,11 @@ final class ProductService: ProductServiceProtocol {
     /// ```swift
     /// productService.generateMockProducts(count: 5)
     /// ```
-    func generateMockProducts(count: Int = 10) {
+    func generateMockProducts(count: Int = 11) {
         for _ in 0..<count {
             let product = ProductModel(
                 name: randomProductName(),
-                price: Double.random(in: 1...10),
+                price: Double.random(in: 1...11),
                 available: Bool.random(),
                 presentation: PresentationEnum.allCases.randomElement()!,
                 baseUnit: BaseUnitEnum.allCases.randomElement()!,
@@ -92,7 +92,7 @@ final class ProductService: ProductServiceProtocol {
     ///
     /// - Returns: Una cadena de texto representando un nombre de producto.
     private func randomProductName() -> String {
-        let names = ["Manzana", "Banana", "Carne", "Leche", "Pan", "Jugo", "Queso", "Arroz", "Tomate", "Café"]
+        let names = ["Cochinita", "Lechon", "Torta de Conchinita", "Torta de Lechon", "Taco de Cochinita", "Taco de Lechon", "Barra", "Tortilla", "Bolsa de Cebolla", "Refresco Natural", "Coca"]
         return names.randomElement() ?? "Producto Desconocido"
     }
 }

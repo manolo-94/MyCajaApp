@@ -88,10 +88,14 @@ final class CartViewModel: ObservableObject {
             throw NSError(domain: "", code: 1, userInfo: [NSLocalizedDescriptionKey: "El monto pagado es menor al total."])
         }
         
+        let change = amountPaid - total
+        
         let sale = SaleModel(
             paymentMethod: method,
             status: .completed,
             total: total,
+            amountPaid: amountPaid,
+            change: change,
             details: details
         )
         
@@ -103,7 +107,7 @@ final class CartViewModel: ObservableObject {
         //lastSaleItems = carItems
         //clearCart()
         
-        let change = amountPaid - total
+        //let change = amountPaid - total
         
         return change
         

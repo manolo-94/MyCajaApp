@@ -36,7 +36,7 @@ class ProductViewModel: ObservableObject {
     
     /// Genera datos de prueba (mock) si la base de datos no contiene productos.
     func generateMockData() {
-        productService.generateMockProducts(count: 5)
+        productService.generateMockProducts(count: 11)
         loadAllProducts()
     }
     

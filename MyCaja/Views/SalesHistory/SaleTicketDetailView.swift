@@ -12,7 +12,8 @@ struct SaleTicketDetailView: View {
     let saleItems: [SaleDetailModel]
     let total: Double
     let paymentMethod: PaymentMethodsEnum
-    //let amountPaid: Double
+    let amountPaid: Double
+    let change: Double
     //@ObservedObject var cartViewModel: CartViewModel
     
     var onFinish: () -> Void
@@ -61,11 +62,11 @@ struct SaleTicketDetailView: View {
                     Text(paymentMethod.description).bold()
                 }
                 
-                /*HStack {
+                HStack {
                     Text("Total pagado:")
                     Spacer()
                     Text("$\(amountPaid, specifier: "%.2f")").bold()
-                }*/
+                }
                 
                 HStack {
                     Text("Total venta:")
@@ -73,11 +74,11 @@ struct SaleTicketDetailView: View {
                     Text("$\(total, specifier: "%.2f")").bold()
                 }
                 
-                /*HStack {
+                HStack {
                     Text("Cambio:")
                     Spacer()
-                    Text("$\(amountPaid - total, specifier: "%.2f")").bold()
-                }*/
+                    Text("$\(change, specifier: "%.2f")").bold()
+                }
             }
             .padding()
             .backgroundStyle(Color(.systemGray5))

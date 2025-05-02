@@ -20,6 +20,10 @@ class SaleModel {
     
     var total: Double
     
+    var amountPaid: Double
+    
+    var change: Double
+    
     var details: [SaleDetailModel]
     
     init(
@@ -28,6 +32,8 @@ class SaleModel {
         paymentMethod: PaymentMethodsEnum,
         status: SaleStatusEnum,
         total: Double,
+        amountPaid: Double,
+        change: Double,
         details: [SaleDetailModel]
     ) {
         self.id = id
@@ -35,6 +41,8 @@ class SaleModel {
         self.paymentMethod = paymentMethod
         self.status = status
         self.total = total
+        self.amountPaid = amountPaid
+        self.change = change
         self.details = details
     }
 }
