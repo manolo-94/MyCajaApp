@@ -26,20 +26,21 @@ struct SaleProductListView: View {
                         product in SaleProductCardView(product:product) {
                             //cartViewModel.addProduct(product, quantity: 1)
                             selectedProduct = product
-                            showModal = true
+                            //showModal = true
                         }
                     }
                 }
                 .padding()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .sheet(isPresented: $showModal) {
-                if let product = selectedProduct {
+            .sheet(item: $selectedProduct) { product in
+                
                     SaleQuantityInputView(product: product, onAdd: {
                         result in cartViewModel.addProduct(product, quantity: result)
-                        showModal = false
+                        //showModal = false
+                        selectedProduct = nil
                     })
-                }
+                
             }
         }
     }
