@@ -17,7 +17,7 @@ struct SaleTicketDetailView: View {
     
     var onFinish: () -> Void
     
-    @Environment(\.dismiss) var dismiss
+    //@Environment(\.dismiss) var dismiss
     
     
     var body: some View {
@@ -88,8 +88,8 @@ struct SaleTicketDetailView: View {
             
             Button {
                 //cartViewModel.clearCart()
-                dismiss()
-                //onFinish()
+                //dismiss()
+                onFinish()
             } label: {
                 HStack {
                     Image(systemName: "checkmark.seal.fill")
