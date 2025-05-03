@@ -14,36 +14,36 @@ struct SaleProductListView: View {
     @ObservedObject var cartViewModel: CartViewModel
     
     @State private var selectedProduct: ProductModel?
-    @State private var showModal = false
+    
+    // MARK: - Dynamic grid layout
+    var adaptiveColumns: [GridItem] {
+        [GridItem(.adaptive(minimum: 160), spacing: 16)]
+    }
     
     var body: some View {
         VStack {
-            Text("Selecciona Productos").font(.title.bold()).padding()
+            Text("Selecciona Productos")
+                .font(.title.bold())
+                .padding(.top)
             
             ScrollView {
-                LazyVStack(spacing: 16) {
-                    ForEach(saleProductViewModel.availableProducts, id: \.id) {
-                        product in SaleProductCardView(product:product) {
-                            //cartViewModel.addProduct(product, quantity: 1)
+                LazyVGrid(columns: adaptiveColumns, spacing: 16) {
+                    ForEach(saleProductViewModel.availableProducts, id: \.id) { product in
+                        SaleProductCardView(product: product) {
                             selectedProduct = product
-                            //showModal = true
                         }
                     }
                 }
                 .padding()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .sheet(item: $selectedProduct) { product in
-                
-                    SaleQuantityInputView(product: product, onAdd: {
-                        result in cartViewModel.addProduct(product, quantity: result)
-                        //showModal = false
-                        selectedProduct = nil
-                    })
-                
+        }
+        .sheet(item: $selectedProduct) { product in
+            SaleQuantityInputView(product: product) { quantity in
+                cartViewModel.addProduct(product, quantity: quantity)
+                selectedProduct = nil
             }
         }
     }
 }
-
 
