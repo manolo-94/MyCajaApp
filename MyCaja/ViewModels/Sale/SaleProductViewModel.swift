@@ -22,6 +22,6 @@ final class SaleProductViewModel: ObservableObject {
     
     func loadAvailableProdcuts(){
         let allProduct = productService.fetchAllProducts()
-        self.availableProducts = allProduct.filter {$0.available}
+        self.availableProducts = allProduct.filter {$0.available}.sorted{ $0.updatedAt > $1.updatedAt}
     }
 }

@@ -45,13 +45,17 @@ final class ProductAdminViewModel: ProductViewModel {
         baseUnit: BaseUnitEnum,
         image: Data? = nil
     ) {
+        let now = Date()
+        
         let product = ProductModel(
             name: name,
             price: price,
             available: available,
             presentation: presentation,
             baseUnit: baseUnit,
-            image: image
+            image: image,
+            createdAt: now,
+            updatedAt: now
         )
         productService.createProduct(product)
         loadAllProducts()
@@ -76,6 +80,7 @@ final class ProductAdminViewModel: ProductViewModel {
         product.presentation = presentation
         product.baseUnit = baseUnit
         product.image = image
+        product.updatedAt = Date()
         
         // Llama al servicio para actualizar el producto específico.
         productService.updateProduct(product)

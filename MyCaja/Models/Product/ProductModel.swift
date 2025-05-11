@@ -38,6 +38,10 @@ class ProductModel {
     /// Imagen del producto almacenada en formato binario (opcional).
     var image: Data?
     
+    var createdAt: Date
+    
+    var updatedAt: Date
+    
     /// Inicializador del modelo `ProductModel`.
     ///
     /// - Parameters:
@@ -55,7 +59,9 @@ class ProductModel {
         available: Bool,
         presentation: PresentationEnum,
         baseUnit: BaseUnitEnum,
-        image: Data? = nil
+        image: Data? = nil,
+        createdAt: Date = Date(),
+        updatedAt: Date = Date()
     ){
         self.id = id
         self.name = name
@@ -64,6 +70,8 @@ class ProductModel {
         self.presentation = presentation
         self.baseUnit = baseUnit
         self.image = image
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
     }
 }
 
