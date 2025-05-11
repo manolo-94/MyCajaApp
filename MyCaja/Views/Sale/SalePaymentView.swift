@@ -17,6 +17,8 @@ struct SalePaymentView: View {
     
     @State private var localToast: ToastModel? = nil
     
+    @FocusState private var isInputFocused:Bool
+    
     var body: some View {
         VStack(spacing: 20) {
             Text("Confirmar Pago")
@@ -26,29 +28,30 @@ struct SalePaymentView: View {
                 Text("Total a pagar")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
-
+                
                 Text("$\(total, specifier: "%.2f")")
                     .font(.title.bold())
                     .foregroundColor(.green)
             }
-
+            
             VStack(alignment: .leading, spacing: 8) {
                 Text("Cantidad pagada")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
-
+                
                 TextField("Ej. 200.00", text: $amountPaid)
                     .keyboardType(.decimalPad)
                     .padding()
                     .background(Color(.systemGray6))
                     .cornerRadius(8)
+                    .focused($isInputFocused)
             }
-
+            
             VStack(alignment: .leading, spacing: 8) {
                 Text("Método de pago")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
-
+                
                 Picker("Método de pago", selection: $selectedPaymentMethod) {
                     ForEach(PaymentMethodsEnum.allCases, id: \.self) { method in
                         Text(method.description)
@@ -56,7 +59,7 @@ struct SalePaymentView: View {
                 }
                 .pickerStyle(.segmented)
             }
-
+            
             // Mostrar el cambio si el pago es válido
             if let amount = Double(amountPaid),
                amount >= total && selectedPaymentMethod == .cash{
@@ -66,7 +69,7 @@ struct SalePaymentView: View {
                     .foregroundColor(.blue)
                     .padding(.top, 10)
             }
-
+            
             Button(action: {
                 if let amount = Double(amountPaid) {
                     onConfirm(amount)
@@ -83,9 +86,15 @@ struct SalePaymentView: View {
                 .foregroundColor(.white)
                 .cornerRadius(10)
             }
-
-            Button("Cancelar", role: .cancel, action: onCancel)        }
+            
+            Button("Cancelar", role: .cancel, action: onCancel)
+        }
         .padding()
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                isInputFocused = true
+            }
+        }
                 
     }
 }

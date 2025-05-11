@@ -16,6 +16,8 @@ struct EditSaleProductCartView: View {
    @State private var inputText = ""
    @State private var calculatedSubtotal: Double = 0.0
     
+    @FocusState private var isInputFocused: Bool
+    
     var inputLabel: String {
         item.isBulk ? "Monto en pesos" : "Cantidad"
     }
@@ -24,7 +26,9 @@ struct EditSaleProductCartView: View {
         NavigationView {
             Form {
                 Section (header: Text("\(item.productName)")) {
-                    TextField(inputLabel, text: $inputText).keyboardType(.decimalPad).onChange(of: inputText) {
+                    TextField(inputLabel, text: $inputText).keyboardType(.decimalPad)
+                        .focused($isInputFocused)
+                        .onChange(of: inputText) {
                         
                         let value = Double(inputText)
                         calculatedSubtotal = item.unitPrice * (value ?? 0)
@@ -63,6 +67,11 @@ struct EditSaleProductCartView: View {
                         }
                     }
                     .disabled(inputText.isEmpty)
+                }
+            }
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    isInputFocused = true
                 }
             }
             

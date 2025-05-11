@@ -16,6 +16,8 @@ struct SaleQuantityInputView: View {
    @State private var inputText = ""
    @State private var calculatedSubtotal: Double = 0.0
     
+    @FocusState private var isInputFocused: Bool
+    
     var inputLabel: String {
         product.presentation == .granel ? "Monto en pesos" : "Cantidad"
     }
@@ -24,7 +26,9 @@ struct SaleQuantityInputView: View {
         NavigationView {
             Form {
                 Section (header: Text("\(product.name)")) {
-                    TextField(inputLabel, text: $inputText).keyboardType(.decimalPad).onChange(of: inputText) {
+                    TextField(inputLabel, text: $inputText).keyboardType(.decimalPad)
+                        .focused($isInputFocused)
+                        .onChange(of: inputText) {
                         
                         let value = Double(inputText)
                         calculatedSubtotal = product.price * (value ?? 0)
@@ -63,6 +67,11 @@ struct SaleQuantityInputView: View {
                         }
                     }
                     .disabled(inputText.isEmpty)
+                }
+            }
+            .onAppear{
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    isInputFocused = true
                 }
             }
             
