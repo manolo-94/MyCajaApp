@@ -22,9 +22,9 @@ struct SaleProductListView: View {
     
     var body: some View {
         VStack {
-            Text("Selecciona Productos")
+            /*Text("Selecciona Productos")
                 .font(.title.bold())
-                .padding(.top)
+                .padding(.top)*/
             
             ScrollView {
                 LazyVGrid(columns: adaptiveColumns, spacing: 16) {
