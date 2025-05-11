@@ -45,7 +45,7 @@ struct SaleProductCardView: View {
             .padding(.horizontal, 4)
 
             // Botón agregar al carrito
-            Button(action: onAddToCart) {
+            /*Button(action: onAddToCart) {
                 HStack {
                     Image(systemName: "cart.badge.plus")
                     Text("Agregar")
@@ -56,11 +56,24 @@ struct SaleProductCardView: View {
                 .background(Color.green)
                 .foregroundColor(.white)
                 .cornerRadius(8)
+            }*/
+            HStack {
+                Image(systemName: "cart.badge.plus")
+                Text("Agregar")
             }
+            .font(.caption)
+            .padding(.vertical, 6)
+            .frame(maxWidth: .infinity)
+            .background(Color.green)
+            .foregroundColor(.white)
+            .cornerRadius(8)
         }
         .padding()
         .background(Color(.systemGray6))
         .cornerRadius(12)
         .shadow(color: .gray.opacity(0.2), radius: 4, x: 0, y: 2)
+        .onTapGesture {
+            onAddToCart()
+        }
     }
 }
