@@ -87,7 +87,7 @@ struct SalePaymentView: View {
                 .cornerRadius(10)
             }
             
-            Button("Cancelar", role: .cancel, action: onCancel)
+            Button("Cancelar", role: .cancel, action: onCancel).foregroundStyle(Color.red)
         }
         .padding()
         .onAppear {
