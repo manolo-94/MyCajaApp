@@ -78,7 +78,25 @@ struct SaleCartSummaryView: View {
             }
             .font(.headline)
             
-            HStack {
+            VStack {
+                
+                Button(action: {
+                    showingPaymentSheet = true
+                }) {
+                    HStack {
+                        Image(systemName: "dollarsign.circle.fill")
+                        Text("Pagar")
+                            .fontWeight(.semibold)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(cartViewModel.carItems.isEmpty ? Color.gray : Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                }
+                .disabled(cartViewModel.carItems.isEmpty)
+                
+                
                 Button("Cancelar") {
                     cartViewModel.clearCart()
                     
@@ -88,14 +106,8 @@ struct SaleCartSummaryView: View {
                 }
                 .foregroundStyle(Color.red)
                 
-                Spacer()
+                //Spacer()
                 
-                Button("Pagar") {
-                    //cartViewModel.registerSale()
-                    showingPaymentSheet = true
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(cartViewModel.carItems.isEmpty)
             }
         }
         .padding()
@@ -210,3 +222,7 @@ struct SaleCartSummaryView: View {
     }
 }
 
+#Preview{
+    // Preview con el Mock
+    SaleCartSummaryView(cartViewModel: .full)
+}
