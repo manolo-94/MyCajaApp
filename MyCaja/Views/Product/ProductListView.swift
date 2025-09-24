@@ -63,7 +63,7 @@ struct ProductListView: View {
             // Configura la vista para ocupar todo el espacio disponible.
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color(.systemBackground)) // Fondo del contenedor.
-            .navigationTitle("Productos") // Título de la navegación.
+            //.navigationTitle("Productos") // Título de la navegación.
             .toolbar {
                 // Botón en la barra de herramientas para agregar un nuevo producto.
                 ToolbarItem(placement: .topBarTrailing) {
