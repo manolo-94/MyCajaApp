@@ -62,9 +62,22 @@ struct SaleView: View {
                      */
                     SaleProductListView(saleProductViewModel: saleProductVM, cartViewModel: cartVM)
                         .toolbar{
-                            NavigationLink(destination: SaleCartSummaryView(cartViewModel: cartVM)) {
-                                Image(systemName: "cart")
-                                Text(String(format: "$%.2f", cartVM.calculateTotal())).font(.subheadline).foregroundColor(.primary)
+                            ToolbarItem(placement: .principal) {
+                                
+                                NavigationLink(destination: SaleCartSummaryView(cartViewModel: cartVM)) {
+                                    HStack(alignment: .center, spacing: 10) {
+                                        Image(systemName: "cart")
+                                        
+                                        Text(String(format: "$%.2f", cartVM.calculateTotal())).font(.subheadline).foregroundColor(.white)
+                                    }
+                                    .padding(.horizontal, 50)
+                                    .padding(.vertical, 6)
+                                    .background(cartVM.carItems.isEmpty ? Color.gray : Color.blue)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(10)
+                                    .frame(maxWidth: .infinity)
+                                }
+                                .disabled(cartVM.carItems.isEmpty)
                             }
                         }
                 }
