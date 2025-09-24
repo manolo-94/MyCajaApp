@@ -18,3 +18,6 @@ struct MyCajaApp: App {
         .modelContainer(SwiftDataStack.shared.container)
     }
 }
+#Preview("App Completa") {
+    MainView()
+}
