@@ -29,13 +29,17 @@ struct MainView: View {
                         SalesHistoryView()
                     }
                 }
-                .navigationTitle(selectedScreen.rawValue).toolbar {
+                //.navigationTitle(selectedScreen.rawValue)
+                .toolbar {
                     ToolbarItem(placement: .topBarLeading){
                         Button(action: {
                             isMenuOpen.toggle()
                         }){
                             Image(systemName: "line.horizontal.3").imageScale(.large)
                         }
+                    }
+                    ToolbarItem(placement: .principal){
+                        Text(selectedScreen.rawValue).font(.headline).foregroundStyle(Color.primary)
                     }
                 }
             }
